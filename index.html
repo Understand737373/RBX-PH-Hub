@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHERWINA HUB</title>
+    <style>
+        body {
+            background-color: #090611; /* Extrem dunkles Lila/Schwarz */
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #bfa2ff;
+            text-shadow: 0 0 10px #9d4edd, 0 0 20px #9d4edd;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: #8a7fa6;
+            font-size: 1rem;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* 2x2 Kachel-Raster im Sherwina-Style */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            max-width: 440px;
+            margin: 0 auto 35px auto;
+            padding: 0 10px;
+        }
+
+        .stat-card {
+            background-color: #140f24;
+            border-radius: 12px;
+            padding: 20px 10px;
+            border: 1px solid rgba(157, 78, 221, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #d4a5ff;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #7b6f96;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Key System Bereich */
+        .key-box {
+            background: #140f24;
+            border: 2px solid #9d4edd;
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.4);
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto 40px auto;
+        }
+
+        .key-box h3 {
+            color: #9d4edd;
+            margin-top: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="text"] {
+            width: 85%;
+            padding: 12px;
+            background-color: #090611;
+            border: 1px solid #7b1fa2;
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+            font-size: 1rem;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"]:focus {
+            box-shadow: 0 0 8px #9d4edd;
+        }
+
+        .submit-btn {
+            background-color: #140f24;
+            color: #e0aaff;
+            border: 1px solid #9d4edd;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 90%;
+            transition: all 0.2s;
+            box-shadow: 0 0 5px rgba(157, 78, 221, 0.2);
+        }
+
+        .submit-btn:hover {
+            background-color: #9d4edd;
+            color: #140f24;
+            box-shadow: 0 0 12px #9d4edd;
+        }
+
+        .status-message {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* Grid & Blöcke */
+        .hub-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto 40px auto;
+        }
+
+        .block {
+            background: #140f24;
+            border: 2px solid #7b1fa2;
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .block.unlocked {
+            opacity: 1;
+            pointer-events: auto;
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.2);
+        }
+
+        .block:hover.unlocked {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(157, 78, 221, 0.5);
+        }
+
+        .block h2 {
+            margin-top: 0;
+            color: #d4a5ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .block p {
+            color: #8a7fa6;
+            font-size: 0.95rem;
+        }
+
+        .copy-btn {
+            background-color: #140f24;
+            color: #d4a5ff;
+            border: 1px solid #7b1fa2;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            box-shadow: 0 0 10px #9d4edd;
+            background-color: rgba(157, 78, 221, 0.05);
+        }
+
+        .copy-btn.copied {
+            background-color: #2ec4b6 !important;
+            color: #090611 !important;
+            border-color: #2ec4b6 !important;
+            box-shadow: 0 0 15px #2ec4b6 !important;
+        }
+
+        .game-banner {
+            width: 100%;
+            max-height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        /* Socials Footer */
+        .socials-footer {
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #140f24;
+            border-top: 1px solid rgba(157, 78, 221, 0.2);
+        }
+
+        .socials-footer h4 {
+            color: #bfa2ff;
+            margin-bottom: 15px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .social-links a {
+            color: #ffffff;
+            text-decoration: none;
+            background: #090611;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid #7b1fa2;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .social-links a:hover {
+            box-shadow: 0 0 10px #9d4edd;
+            border-color: #9d4edd;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>✨ SHERWINA HUB</h1>
+    <div class="subtitle">Official Tester & Trusted Reseller Hub</div>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-value">Premium</span>
+            <span class="stat-label">Scripts</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">Safe</span>
+            <span class="stat-label">Verified</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">24/7</span>
+            <span class="stat-label">Support</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">Online</span>
+            <span class="stat-label">Status</span>
+        </div>
+    </div>
+
+    <div class="key-box">
+        <h3>🔑 Enter Key to Unlock Hub</h3>
+        <input type="text" id="keyInput" placeholder="Enter Key Here...">
+        <button class="submit-btn" onclick="checkKey()">Submit Key</button>
+        <div id="status" class="status-message" style="color: #8a7fa6;">Locked 🔒</div>
+    </div>
+
+    <div class="hub-container">
+
+        <div class="block" id="block1">
+            <img src="https://cdn.discordapp.com/attachments/1516375399645581434/1516549532396032120/image0.jpg?ex=6a330c50&is=6a31bad0&hm=2eb861b030dba3d5b33f823dae3eeb063cc58764ee79c057372136e1b5844936&" alt="Game Banner" class="game-banner">
+            <h2>🔮 Quantum Hub [Premium]</h2>
+            <p>Official Supported Script - Best Features & Performance</p>
+            <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet('https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua'))()`)">Copy Script</button>
+        </div>
+
+        <div class="block" id="block2">
+            <img src="https://cdn.discordapp.com/attachments/1516375399645581434/1516750519253729310/image.png" alt="Game Banner" class="game-banner">
+            <h2>🎯 Rivals Special</h2>
+            <p>Aimbot, ESP, Rage Features & More</p>
+            <button class="copy-btn" onclick="copyScript(this, `loadstring(game:HttpGet(&quot;https://raw.githubusercontent.com/awakeningswifters/LexusHubLoader/refs/heads/main/Loader.lua&quot;))()`)">Copy Script</button>
+        </div>
+
+    </div>
+
+    <div class="socials-footer">
+        <h4>🔗 Connect with Sherwina</h4>
+        <div class="social-links">
+            <a href="https://discord.gg/onyxfam" target="_blank">🌐 Onyxs Server</a>
+            <a href="https://discord.gg/zB2FNmxV6B" target="_blank">💬 My Discord</a>
+            <a href="https://www.facebook.com/share/p/17s2m9Nqi9/" target="_blank">📱 Facebook Page</a>
+        </div>
+    </div>
+
+    <script>
+        const correctKey = "sherwina-partner"; 
+
+        function checkKey() {
+            const input = document.getElementById("keyInput").value.toLowerCase().trim();
+            const status = document.getElementById("status");
+            const blocks = document.querySelectorAll(".block");
+
+            if (input === correctKey) {
+                status.innerText = "Access Granted! ✅ Unlocked";
+                status.style.color = "#2ec4b6";
+                document.getElementById("keyInput").style.borderColor = "#2ec4b6";
+                
+                blocks.forEach(block => {
+                    block.classList.add("unlocked");
+                });
+            } else if (input === "") {
+                status.innerText = "Please enter a key! ⚠️";
+                document.getElementById("keyInput").style.borderColor = "#9d4edd";
+                
+                blocks.forEach(block => {
+                    block.classList.remove("unlocked");
+                });
+            } else {
+                status.innerText = "Wrong Key! ❌ Try Again";
+                status.style.color = "#ff4b4b";
+                document.getElementById("keyInput").style.borderColor = "#ff4b4b";
+                
+                blocks.forEach(block => {
+                    block.classList.remove("unlocked");
+                });
+            }
+        }
+
+        function copyScript(button, scriptText) {
+            navigator.clipboard.writeText(scriptText).then(() => {
+                const originalText = button.innerText;
+                button.innerText = "Copied! ✅";
+                button.classList.add("copied");
+                
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.classList.remove("copied");
+                }, 2000);
+            }).catch(err => {
+                alert("Fehler beim Kopieren: " + err);
+            });
+        }
+    </script>
+
+</body>
+</html>
